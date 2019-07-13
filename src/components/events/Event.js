@@ -31,28 +31,8 @@ export class Event extends Component {
 
     return (
       <Fragment>
-        <div className="card grid-2">
-          <div className="card grid-2">
-            {logo && (
-              <img
-                src={logo.original.url}
-                className="round-img"
-                alt=""
-                style={{ width: "150px" }}
-              />
-            )}
-            {name && <h2>{name.text}</h2>}
-            {url && (
-              <a href={url} target="_blank" rel="noopener noreferrer">
-                Tickets
-              </a>
-            )}
-          </div>
-          <div className="card grid-2">
-            {description && <p>{description.text}</p>}
-          </div>
-        </div>{" "}
-        <Link to="/" className="btn btn-light">
+        {name && <h2 style={{ marginBottom: "40px" }}>{name.text}</h2>}
+        <Link to="/" className="btn btn-dark">
           Back
         </Link>
         Free:{" "}
@@ -61,6 +41,29 @@ export class Event extends Component {
         ) : (
           <i className="fas fa-times-circle text-danger" />
         )}
+        <div className="grid-2">
+          <div className="card">
+            {logo && (
+              <img src={logo.original.url} alt="" style={{ width: "460px" }} />
+            )}
+
+            {url && (
+              <a
+                href={url}
+                target="_blank"
+                className="btn btn-dark"
+                rel="noopener noreferrer"
+              >
+                Tickets
+              </a>
+            )}
+          </div>
+          <div className="grid-2">
+            {description && (
+              <p style={{ width: "400px" }}>{description.text}</p>
+            )}
+          </div>
+        </div>{" "}
       </Fragment>
     );
   }

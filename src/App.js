@@ -15,14 +15,15 @@ class App extends Component {
     alert: null,
     events: [],
     event: {},
-    within: null
+    within: null,
+    keyword: "lesbian"
   };
 
-  searchEvents = async (location, within) => {
+  searchEvents = async (location, within, keyword) => {
     this.setState({ loading: true });
-    console.log(location, within);
+    console.log(location, within, keyword);
     const res = await axios.get(
-      `https://www.eventbriteapi.com/v3/events/search/?q=queer&location.address=${location}&sort_by=date&location.within=${within}mi&token=${
+      `https://www.eventbriteapi.com/v3/events/search/?q=${keyword}&location.address=${location}&sort_by=date&location.within=${within}mi&token=${
         process.env.REACT_APP_EVENTBRITE_CLIENT_ID
       }`
     );

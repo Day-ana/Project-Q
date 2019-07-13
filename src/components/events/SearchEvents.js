@@ -5,7 +5,8 @@ export class Search extends Component {
   //Set Default location/text for testing
   state = {
     text: "Oakland",
-    within: 10
+    within: 10,
+    keyword: "queer"
   };
   static propTypes = {
     clearEvents: PropTypes.func.isRequired,
@@ -19,14 +20,23 @@ export class Search extends Component {
     if (this.state.text === "") {
       this.props.setAlert("Please enter a Location", "light");
     } else {
-      this.props.searchEvents(this.state.text, this.state.within);
+      this.props.searchEvents(
+        this.state.text,
+        this.state.within,
+        this.state.keyword
+      );
       // this.setState({ text: "" });
     }
   };
 
-  onSelect = e => {
+  onSelectRange = e => {
     e.preventDefault();
     this.setState({ within: e.target.value });
+  };
+
+  onSelectKeyword = e => {
+    e.preventDefault();
+    this.setState({ keyword: e.target.value });
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -54,12 +64,22 @@ export class Search extends Component {
             />
             <div className="bottom">
               <label>Within miles:</label>
-              <select onChange={this.onSelect} value={this.state.within}>
+              <select onChange={this.onSelectRange} value={this.state.within}>
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
+              </select>
+              <label>Keyword:</label>
+              <select
+                onChange={this.onSelectKeyword}
+                value={this.state.keyword}
+              >
+                <option value="queer">Queer</option>
+                <option value="lesbian">Lesbian</option>
+                <option value="lgbt">LGBT</option>
+                <option value="gay">gay</option>
               </select>
             </div>
             {showClear && (

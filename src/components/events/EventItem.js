@@ -19,13 +19,19 @@ class EventItem extends Component {
 
     return (
       <div className="card text-center">
-        <img src={imgUrl} alt="" style={{ width: "200px" }} />
-        <h4>{name.text}</h4>
-        <h2>{date}</h2>
+        <img src={imgUrl} alt="" style={{ width: "100%" }} />
+        <h3 style={{ margin: "10px" }}>{name.text}</h3>
+        <h4>{date}</h4>
         <Link to={`/event/${id}`} className="btn btn-dark btn-sm my-1">
           More
         </Link>
-        <a href={url} target="_blank" rel="noopener noreferrer">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          n
+          className="btn btn-light btn-sm my-1"
+        >
           Tickets
         </a>
       </div>
