@@ -16,7 +16,7 @@ class App extends Component {
     events: [],
     event: {},
     within: null,
-    keyword: "lesbian"
+    keyword: "queer"
   };
 
   searchEvents = async (location, within, keyword) => {
