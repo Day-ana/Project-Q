@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from "react";
+import React, { Fragment, useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import SearchEvents from "./components/events/SearchEvents";
@@ -9,89 +9,100 @@ import About from "./components/pages/About";
 import axios from "axios";
 import "./App.css";
 
-class App extends Component {
-  state = {
-    loading: false,
-    alert: null,
-    events: [],
-    event: {},
-    within: null,
-    keyword: "queer"
-  };
+const App = () => {
+  const [events, setEvents] = useState([]);
+  const [event, setEvent] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
 
-  searchEvents = async (location, within, keyword) => {
-    this.setState({ loading: true });
+  const [within, setWithin] = useState(null);
+  const [keyword, setKeyword] = useState("queer");
+
+  const searchEvents = async (location, within, keyword) => {
+    setLoading(true);
     console.log(location, within, keyword);
     const res = await axios.get(
       `https://www.eventbriteapi.com/v3/events/search/?q=${keyword}&location.address=${location}&sort_by=date&location.within=${within}mi&token=${
         process.env.REACT_APP_EVENTBRITE_CLIENT_ID
       }`
     );
-    this.setState({ events: res.data, loading: false });
+    setEvents(res.data);
+    setLoading(false);
   };
 
-  getEvent = async id => {
-    this.setState({ loading: true });
+  // searchMeetups = async (location, within, keyword) => {
+  //   setLoading(true);
+  //   console.log(location, within, keyword);
+  //   const res = await axios.get(
+  //     `https://www.eventbriteapi.com/v3/events/search/?q=${keyword}&location.address=${location}&sort_by=date&location.within=${within}mi&token=${
+  //       process.env.REACT_APP_EVENTBRITE_CLIENT_ID
+  //     }`
+  //   );
+  //   this.setState({ events: res.data, loading: false });
+  // };
+
+  const getEvent = async id => {
+    setLoading(true);
     const res = await axios.get(
       `https://www.eventbriteapi.com/v3/events/${id}/?token=${
         process.env.REACT_APP_EVENTBRITE_CLIENT_ID
       }`
     );
-    this.setState({ event: res.data, loading: false });
+    setEvent(res.data);
+    setLoading(false);
   };
 
-  clearEvents = () => this.setState({ events: [], loading: false });
+  const clearEvents = () => {
+    setEvents([]);
+    setLoading(false);
+  };
 
-  setAlert = (msg, type) => {
-    this.setState({ alert: { msg: msg, type: type } });
+  const showAlert = (msg, type) => {
+    setAlert({ msg, type });
     //Remove Alert box after it's been rendered for 5s
-    setTimeout(() => this.setState({ alert: null }), 5000);
+    setTimeout(() => setAlert(null), 5000);
   };
 
-  render() {
-    const { events, event, loading } = this.state;
-
-    return (
-      <Router>
-        <div className="App bg-image">
-          <Navbar title="ueeery" icon="fas fa-search" />
-          <div className="container">
-            <Alert alert={this.state.alert} />
-            <Switch>
-              <Route
-                exact
-                path="/"
-                render={props => (
-                  <Fragment>
-                    <SearchEvents
-                      searchEvents={this.searchEvents}
-                      clearEvents={this.clearEvents}
-                      showClear={events.length > 0 ? true : false}
-                      setAlert={this.setAlert}
-                      onSelect={this.updateMilesWithin}
-                    />
-                    <Events loading={loading} {...props} events={events} />
-                  </Fragment>
-                )}
-              />
-              <Route exact path="/about" component={About} />
-              <Route
-                exact
-                path="/event/:id"
-                render={props => (
-                  <Event
-                    {...props}
-                    getEvent={this.getEvent}
-                    event={event}
-                    loading={loading}
+  return (
+    <Router>
+      <div className="App bg-image">
+        <Navbar title="ueeery" icon="fas fa-search" />
+        <div className="container">
+          <Alert alert={alert} />
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={props => (
+                <Fragment>
+                  <SearchEvents
+                    searchEvents={searchEvents}
+                    clearEvents={clearEvents}
+                    showClear={events.length > 0 ? true : false}
+                    setAlert={showAlert}
+                    onSelect={setWithin}
                   />
-                )}
-              />
-            </Switch>
-          </div>
+                  <Events loading={loading} {...props} events={events} />
+                </Fragment>
+              )}
+            />
+            <Route exact path="/about" component={About} />
+            <Route
+              exact
+              path="/event/:id"
+              render={props => (
+                <Event
+                  {...props}
+                  getEvent={getEvent}
+                  event={event}
+                  loading={loading}
+                />
+              )}
+            />
+          </Switch>
         </div>
-      </Router>
-    );
-  }
-}
+      </div>
+    </Router>
+  );
+};
 export default App;

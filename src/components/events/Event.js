@@ -12,7 +12,6 @@ const Event = ({ event, loading, getEvent, match }) => {
 
   const { logo, url, id, name, locale, is_free, description } = event;
 
-  // console.log(this.props.event);
   if (loading) return <Spinner />;
   return (
     <Fragment>
